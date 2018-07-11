@@ -1,0 +1,14 @@
+base = 1, tree[(1 << 18) + 5]
+
+  while (base < N) base <<= 1;
+	for (int i = 0; i < (base<<1); i++) tree[i] = res;
+	for (int i = base; i < N + base; i++) cin >> tree[i];
+  
+  int query(int l, int r){
+	res = 2e9;
+	for (l += base - 1, r += base - 1; l <= r; l >>= 1, r >>= 1){
+		if (l & 1) res = min(tree[l++], res);
+		if (~r & 1) res = min(tree[r--], res);
+	}
+	return res;
+}
