@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#define MAX 50005
+#define swap(a,b) {int t=a;a=b;b=t;}
+using namespace std;
+int depth[MAX], p[MAX][17],parent[MAX],n,m,x,y;
+bool check[MAX];
+vector <int> a[MAX];
+queue <int> q;
+int lca(int u, int v) {
+	if (depth[u] < depth[v]) swap(u, v);
+	int log = 1;
+	for (; (1 << log) <= depth[u]; log++);
+	log--;
+	for (int i = log; i > -1; i--)
+		if (depth[u] - (1 << i) >= depth[v]) u = p[u][i];
+	if (u == v) return u;
+	else {
+		for (int i = log; i > -1; i--) 
+			if (p[u][i] && p[u][i] != p[v][i]) {
+				u = p[u][i];
+				v = p[v][i];
+			}
+		return parent[u];
+	}
+}
+int main() {
+	ios_base::sync_with_stdio(0); cin.tie(0);
+	cin >> n;
+	for (int i = 0; i < n-1; i++) {
+		cin >> x >> y;
+		a[x].push_back(y);
+		a[y].push_back(x);
+	}
+	q.push(1);
+	check[1] = true;
+	while (!q.empty()) {
+		x = q.front();
+		q.pop();
+		for (int z : a[x]) 
+			if (!check[z]) {
+				depth[z] = depth[x] + 1;
+				check[z] = true;
+				parent[z] = x;
+				q.push(z);
+			}
+	}
+	for (int i = 1; i <= n; i++) p[i][0] = parent[i];
+	for (int j = 1; (1 << j) < n; j++)
+		for (int i = 1; i <= n; i++)
+			if (p[i][j - 1]) p[i][j] = p[p[i][j - 1]][j - 1];
+	cin >> m;
+	while (m--) {
+		cin >> x >> y;
+		cout << lca(x, y)<<'\n';
+	}
+	return 0;
+}
