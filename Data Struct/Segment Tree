@@ -1,0 +1,2 @@
+void init(int node, int start, int end){
+}
