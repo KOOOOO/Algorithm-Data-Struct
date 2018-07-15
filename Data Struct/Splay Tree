@@ -1,0 +1,111 @@
+struct node {
+	node *l, *r, *p;
+	int key;
+} *tree;
+
+void Rotate(node *x) {
+	node *p = x->p;
+	node *b;
+	if (x == p->l) {
+		p->l = b = x->r;
+		x->r = p;
+	}
+	else {
+		p->r = b = x->l;
+		x->l = p;
+	}
+	x->p = p->p;
+	p->p = x;
+	if (b) b->p = p;
+	(x->p ? p == x->p->l ? x->p->l : x->p->r : tree) = x;
+}
+
+void Splay(node *x) {
+	while (x->p) {
+		node *p = x->p;
+		node *g = p->p;
+		if (g) Rotate((x == p->l) == (p == g->) ? p : x);
+		Rotate(x);
+	}
+}
+
+void Insert(int key) {
+	node *p = tree, **pp;
+	if (!p) {
+		node *x = new node;
+		tree = x;
+		x->l = x->r = x->p = nullptr;
+		x->key = key;
+		return;
+	}
+	while (1) {
+		if (key == p->key) return;
+		if (key < p->key) {
+			if (!p->l) {
+				pp = &p->r;
+				break;
+			}
+			p = p->l;
+		}
+		else {
+			if (!p->r) {
+				pp = &p->r;
+				break;
+			}
+			p = p->r;
+		}
+	}
+	node *x = new node;
+	*pp = x;
+	x->l = x->r = nullptr;
+	x->p = p;
+	x->key = key;
+	Splay(x);
+}
+
+bool Find(int key) {
+	node *p = tree;
+	if (!p) return false;
+	while (p) {
+		if (key == p->key) break;
+		if (key < p->key) {
+			if (!p->l) break;
+			p = p->l;
+		}
+		else {
+			if (!p->r) break;
+			p = p->r;
+		}
+	}
+	Splay(p);
+	return key == p->key;
+}
+
+void Delete(int key) {
+	if (!Find(key)) return;
+	node *p = tree;
+	if (p->l) {
+		if (p->r) {
+			tree = p->l;
+			tree->p = nullptr;
+			node *x = tree;
+			while (x->r) x = x->r;
+			x->r = p->r;
+			p->r->p = x;
+			Splay(x);
+			delete p;
+			return;
+		}
+		tree = p->l;
+		tree->p = nullptr;
+		delete p;
+		return;
+	}
+	if (p->r) {
+		tree = p->r;
+		tree->p = nullptr;
+		delete p;
+		return;
+	}
+	tree = nullptr;
+}
