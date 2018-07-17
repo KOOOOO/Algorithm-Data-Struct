@@ -1,0 +1,10 @@
+void update_lazy(vector <int> &tree, vector <int> &lazy, int node, int start, int end) {
+	if (lazy[node] != 0) {
+		tree[node] += (end - start + 1)*lazy[node];
+		if (start != end) {
+			lazy[node * 2] += lazy[node];
+			lazy[node * 2+1] += lazy[node];
+		}
+		lazy[node] = 0;
+	}
+}
