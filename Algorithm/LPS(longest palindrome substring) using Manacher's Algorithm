@@ -1,0 +1,31 @@
+#include<iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+int A[200005];
+string s,a = "A"; // not use character(check even palindrome)
+int lps() {
+	int len = s.size(),r=0,p=0,res=0;
+	for (int i = 0; i < len; i++) {
+		a += s[i];
+		a += 'A';
+	}
+	len = a.size();
+	for (int i = 0; i < len; i++) {
+		if (i <= r) A[i] = min(r - i, A[p * 2 - i]);
+		while (i - A[i] - 1 >= 0 && i + A[i] + 1 < len&&a[i - A[i] - 1] == a[i + A[i]+1]) 
+			A[i]++;
+		if (r < i + A[i]) {
+			r = i + A[i];
+			p = i;
+		}
+		res = max(res, A[i]);
+	}
+	return res;
+}
+int main() {
+	ios_base::sync_with_stdio(0); cin.tie(0);
+	cin >> s;
+	cout << lps();
+	return 0;
+}
