@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+const int trieCnt = 26;
+struct Trie {
+	Trie *children[trieCnt];
+	bool terminal,nextChild;
+
+	Trie() {
+		fill(children, children + trieCnt, nullptr);
+		terminal = nextChild = false;
+	}
+	~Trie() {
+		for (int i = 0; i < trieCnt; i++) 
+			if (children[i]) 
+				delete children[i];
+	}
+
+	bool insert(const char *key) {
+		if (*key == '\0') {
+			terminal = true;
+			return !nextChild;
+		}
+		int nextKey = *key - 'a';
+		if (!children[nextKey])
+			children[nextKey] = new Trie;
+		nextChild = true;
+		bool get = children[nextKey]->insert(key + 1);
+		return !terminal&&get;
+	}
+
+	bool find(char *key) {
+		if (*key == '\0') return false;
+		if (terminal) return true;
+		int next = *key - 'a';
+		return children[next]->find(key + 1);
+	}
+};
