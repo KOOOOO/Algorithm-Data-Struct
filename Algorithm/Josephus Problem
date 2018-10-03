@@ -1,0 +1,30 @@
+
+// O(KlogN)
+ll joseph(ll n, ll k) {
+	if (n == 1LL) return 0;
+	if (k == 1LL) return n - 1;
+	if (k > n) return (joseph(n - 1LL, k) + k) % n;
+	ll cnt = n / k;
+	ll res = joseph(n - cnt, k);
+	res -= n % k;
+	if (res < 0) res += n;
+	else res += res / (k - 1LL);
+	return res;
+}
+
+//O(N)
+//recursion
+ll josephus(ll n, ll k){
+	if (n == 1)
+		return 1;
+	else
+		return (josephus(n - 1, k) + k - 1) % n + 1;
+}
+
+//for
+int josephusIteration(int n, int k) {
+	int a = 1;
+	for (int i = 1; i <= n; i++) 
+		a = (a + k - 1) % i + 1;
+	return a;
+}
