@@ -1,0 +1,44 @@
+/*
+O(PlogP)
+*/
+
+#include <bits/stdc++.h>
+#pragma GCC optimize("O3")
+using namespace std;
+typedef long long ll;
+int tc;
+ll N, R, res, P, f[100001];
+ll mpow(ll a, ll p) {
+	ll ret = 1;
+	while (p) {
+		if (p & 1) ret *= a, ret %= P;
+		a *= a;
+		a %= P;
+		p /= 2;
+	}
+	return ret;
+}
+int main() {
+	ios_base::sync_with_stdio(0); cin.tie(0);
+	cin >> tc;
+	for (int t = 1; t <= tc; t++) {
+		cin >> N >> R >> P;
+		f[0] = res = 1;
+		for (int i = 1; i <= P - 1; i++)
+			f[i] = f[i - 1] * i % P;
+		while (N && R) {
+			ll n = N % P;
+			ll r = R % P;
+			if (n < r) {
+				res = 0;
+				break;
+			}
+			res = (res * f[n]) % P;
+			res *= mpow((f[r] * f[n - r]) % P,P - 2);
+			N /= P, R /= P;
+			res %= P;
+		}
+		cout << "#" << t << ' ' << res << '\n';
+	}
+	return 0;
+}
