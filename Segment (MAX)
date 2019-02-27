@@ -1,0 +1,40 @@
+struct IndexedTree {
+	vector <int> tree;
+	int size;
+	IndexedTree(int n, int *arr) :
+		tree(4 * n, 987654321) {
+		size = 1;
+		while (size < n) size <<= 1;
+		for (int i = 0; i < n; ++i)
+			tree[size + i] = arr[i];
+		init(1);
+	}
+
+	int init(int pos) {
+		if (pos >= size)
+			return tree[pos];
+		return tree[pos] = min(init(pos << 1), init(pos << 1 | 1));
+	}
+	int query(int left, int right, int node, int l, int r) {
+		left = max(left, l);
+		right = min(right, r);
+		if (left > right) return 987654321;
+		if (left == l && right == r)
+			return tree[node];
+		int mid = l + r >> 1;
+		return min(query(left, right, node << 1, l, mid), query(left, right, node << 1 | 1, mid + 1, r));
+	}
+	void update(int pos) {
+		if (pos < 1)
+			return;
+		tree[pos] = min(tree[pos << 1], tree[pos << 1 | 1]);
+		update(pos >> 1);
+	}
+	int query(int left, int right) {
+		return query(left, right, 1, 0, size - 1);
+	}
+	void update(int index, int newValue) {
+		tree[size + index] = newValue;
+		update(size + index >> 1);
+	}
+};
