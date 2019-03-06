@@ -1,4 +1,5 @@
 #define swap(a,b) {int t=a;a=b;b=t;}
+#define INF 2e9
 int heap[10005], hn;
 void pop() {
 	heap[1] = heap[hn];
