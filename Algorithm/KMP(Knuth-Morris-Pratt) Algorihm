@@ -1,3 +1,4 @@
+char a[500005], b[100005];
 int pi[100005] = { 0 }, bsize = 1;
 ans = 0;
 scanf("%s %s", a, b);
