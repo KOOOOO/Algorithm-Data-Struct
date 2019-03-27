@@ -1,0 +1,19 @@
+int pi[100005] = { 0 }, bsize = 1;
+ans = 0;
+scanf("%s %s", a, b);
+for (register int i = 1,j=0; b[i]; ++i,++bsize) {
+	while (j > 0 && b[i] != b[j])
+		j = pi[j - 1];
+	if (b[i] == b[j]) pi[i] = ++j;
+}
+for (register int i = 0,j=0;a[i]; ++i) {
+	while (j > 0 && a[i] != b[j])
+		j = pi[j - 1];
+	if (a[i] == b[j]) {
+		if (j == bsize - 1) {
+			ans++;
+			j = pi[j];
+		}
+		else j++;
+	}
+}
